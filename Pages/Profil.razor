@@ -1,0 +1,56 @@
+@page "/profile"
+
+<PageTitle>Profile Creator</PageTitle>
+
+<h1>Profile Creator</h1>
+
+<p role="status">Anzahl erstellter Profile: @profiles.Count</p>
+
+<div>
+    <label>Name: </label>
+    <input @bind="newProfile.Name" placeholder="Gib deinen Namen ein" />
+</div>
+<div>
+    <label>Lieblingsessen: </label>
+    <input @bind="newProfile.FavoriteFood" placeholder="Z. B. Pizza" />
+</div>
+<div>
+    <label>Lieblingstier: </label>
+    <input @bind="newProfile.FavoriteAnimal" placeholder="Z. B. Hund" />
+</div>
+<button class="btn btn-primary" @onclick="AddProfile">Profil hinzufügen</button>
+
+<h2>Gespeicherte Profile</h2>
+<ul>
+    @foreach (var profile in profiles)
+    {
+        <li>@profile.Name - liebt @profile.FavoriteFood und mag @profile.FavoriteAnimal</li>
+        <button class="btn btn-danger" @onclick="() => profiles.Remove(profile)">Profil löschen</button>
+    }
+</ul>
+
+@code {
+    private List<Profile> profiles = new List<Profile>();
+    private Profile newProfile = new Profile();
+
+    private void AddProfile()
+    {
+        if (!string.IsNullOrWhiteSpace(newProfile.Name))
+        {
+            profiles.Add(new Profile { Name = newProfile.Name, FavoriteFood = newProfile.FavoriteFood, FavoriteAnimal = newProfile.FavoriteAnimal });
+            newProfile = new Profile(); // Zurücksetzen
+        }
+    }
+
+    private void RemoveProfile(Profile profile)
+    {
+        profiles.Remove(profile);
+    }
+
+    private class Profile
+    {
+        public string Name { get; set; } = "";
+        public string FavoriteFood { get; set; } = "";
+        public string FavoriteAnimal { get; set; } = "";
+    }
+}
